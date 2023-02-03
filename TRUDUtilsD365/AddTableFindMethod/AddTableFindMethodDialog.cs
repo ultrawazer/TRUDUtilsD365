@@ -22,7 +22,8 @@ namespace TRUDUtilsD365.AddTableFindMethod
             MethodTypeCheckedListBox.Items.Add("find", _parms.IsCreateFind);
             MethodTypeCheckedListBox.Items.Add("exists", _parms.IsCreateExists);
             MethodTypeCheckedListBox.Items.Add("findRecId", _parms.IsCreateFindRecId);
-
+            MethodTypeCheckedListBox.Items.Add("SafeUpdate", _parms.IsSafeUpdate);
+            
             UpdateFromForm();
             ResultTextBox.Text = _parms.GenerateResult();
 
@@ -43,6 +44,9 @@ namespace TRUDUtilsD365.AddTableFindMethod
                         break;
                     case "exists":
                         _parms.IsCreateExists = MethodTypeCheckedListBox.GetItemChecked(i);
+                        break;
+                    case "SafeUpdate":
+                        _parms.IsSafeUpdate = MethodTypeCheckedListBox.GetItemChecked(i);
                         break;
                 }
             }

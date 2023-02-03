@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Dynamics.AX.Metadata.Core.MetaModel;
-using Microsoft.Dynamics.AX.Metadata.MetaModel;
+//using Microsoft.Dynamics.AX.Metadata.MetaModel;
 using Microsoft.Dynamics.Framework.Tools.Extensibility;
 using Microsoft.Dynamics.Framework.Tools.MetaModel.Automation.Tables;
 using TRUDUtilsD365.Kernel;
@@ -30,6 +30,7 @@ namespace TRUDUtilsD365.AddTableFindMethod
         public bool IsCreateFind { get; set; } = true;
         public bool IsCreateFindRecId { get; set; }
         public bool IsCreateExists { get; set; }
+        public bool IsSafeUpdate { get; set; }
 
         public bool IsTestMode { get; set; }
 
@@ -244,6 +245,56 @@ namespace TRUDUtilsD365.AddTableFindMethod
                 generateHelper.IndentDecrease();
 
                 generateHelper.AppendLine("}");
+            }
+
+            if (IsSafeUpdate)
+            {
+                generateHelper.IndentSetValue(0);
+
+                generateHelper.AppendLine("");
+                generateHelper.AppendLine($"public static void SafeUpdate()");
+
+                //build method header
+                generateHelper.AppendLine("{");
+
+                //Try
+                generateHelper.IndentIncrease();
+                generateHelper.AppendLine("try");
+                generateHelper.AppendLine("{");
+
+                generateHelper.IndentIncrease();
+                generateHelper.AppendLine("ttsbegin;");
+
+                generateHelper.AppendLine("this.selectForUpdate(true);");
+                generateHelper.AppendLine("this.update();");
+                generateHelper.AppendLine("ttscommit;");
+                generateHelper.IndentDecrease();
+
+                generateHelper.AppendLine("}");
+
+                //Catch deadlock
+                generateHelper.AppendLine("catch(Exception::Deadlock)");
+                generateHelper.AppendLine("{");
+                generateHelper.IndentIncrease();
+                
+                generateHelper.AppendLine("retry;");
+                generateHelper.IndentDecrease();
+                generateHelper.AppendLine("}");
+
+                //catch update conflict 
+                generateHelper.AppendLine("catch(Exception::UpdateConflict)");
+                generateHelper.AppendLine("{");
+                generateHelper.IndentIncrease();
+
+                generateHelper.AppendLine("this.reread();");
+                generateHelper.AppendLine("retry;");
+                generateHelper.IndentDecrease();
+
+                generateHelper.AppendLine("}");
+                generateHelper.IndentDecrease();
+
+                generateHelper.AppendLine("}");
+
             }
 
             var methodText = generateHelper.ResultString.ToString();

@@ -1,4 +1,4 @@
-﻿using Dynamics.AX.Application;
+﻿//using Dynamics.AX.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,13 +29,13 @@ namespace AddTableFindMethodTest
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            //TestAddTableFindMethod();
+            TestAddTableFindMethod();
             //TestCreateExtensionClass();
             //TestEnumCreator();
             //TestTableFieldsBuilder();
             //TestRunBaseBuilder();
             //TestDataContractBuilder();
-            TestTableBuilder();
+            ///////TestTableBuilder();
             //TestSettings();
         }
 
